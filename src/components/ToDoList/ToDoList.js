@@ -1,17 +1,19 @@
-import React, { Component } from "react";
+import PropTypes from './prop-types';
+import React, { Component } from 'react';
 
 class ToDoList extends Component {
   calcRemainingDays = item => {
     const currentTimeStamp = new Date().getTime();
+    const millisecToDay = 1 / 86400000;
     let remDays;
     if (!item.isDone) {
       remDays =
-        item.daysAssigned - (currentTimeStamp - item.issueTimeStamp) / 86400000;
+        item.daysAssigned -
+        (currentTimeStamp - item.issueTimeStamp) * millisecToDay;
       if (remDays <= 0) {
         return 0;
-      } else {
-        return remDays;
       }
+      return remDays;
     }
     return 0;
   };
@@ -19,10 +21,10 @@ class ToDoList extends Component {
   formatStatusText = item => {
     let textClass;
     let remDays = this.calcRemainingDays(item);
-    textClass = remDays < 1 ? "text-danger font-weight-bold" : "text-primary";
+    textClass = remDays < 1 ? 'text-danger font-weight-bold' : 'text-primary';
     return (
       <span className={textClass}>
-        {item.isDone ? " Complete" : " Pending"}
+        {item.isDone ? ' Complete' : ' Pending'}
       </span>
     );
   };
@@ -51,25 +53,17 @@ class ToDoList extends Component {
                   <input
                     type="checkbox"
                     onChange={() =>
-                      this.props.onActionPerformed(item.id, "checkbox")
+                      this.props.onActionPerformed(item.id, 'checkbox')
                     }
-                    checked={item.isDone ? true : false}
+                    checked={item.isDone}
                   />
                   {this.formatStatusText(item)}
                 </td>
                 <td>
-                  {/* <button
-                    className="btn-sm m-2"
-                    onClick={() =>
-                      this.props.onActionPerformed(item.id, "edit")
-                    }
-                  >
-                    Edit
-                  </button> */}
                   <button
                     className="btn-danger btn-sm m-2"
                     onClick={() =>
-                      this.props.onActionPerformed(item.id, "delete")
+                      this.props.onActionPerformed(item.id, 'delete')
                     }
                   >
                     Delete
@@ -83,5 +77,10 @@ class ToDoList extends Component {
     );
   }
 }
+
+ToDoList.propTypes = {
+  toDoList: PropTypes.array,
+  onActionPerformed: PropTypes.func
+};
 
 export default ToDoList;

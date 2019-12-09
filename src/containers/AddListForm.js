@@ -1,20 +1,16 @@
-import React, { Component } from "react";
-// import "./AddListForm.css";
+import PropTypes from './prop-types';
+import React, { Component } from 'react';
 
 class AddListForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { task: "", daysAssigned: "" };
-  }
+  state = { task: '', daysAssigned: '' };
 
   isFormInvalid = () => {
-    if (this.state.task === "" && this.state.daysAssigned === "")
-      return "Enter task and days";
-    else if (this.state.task === "") return "Enter task";
-    else if (this.state.daysAssigned === "") return "Assign days";
+    if (this.state.task === '' && this.state.daysAssigned === '')
+      return 'Enter task and days';
+    else if (this.state.task === '') return 'Enter task';
+    else if (this.state.daysAssigned === '') return 'Assign days';
     else if (this.state.daysAssigned <= 0)
-      return "Days cannot be negative or zero";
-    else return false;
+      return 'Days cannot be negative or zero';
   };
 
   render() {
@@ -67,4 +63,8 @@ class AddListForm extends Component {
   }
 }
 
+AddListForm.propTypes = {
+  onFormSubmit: PropTypes.func,
+  onCancel: PropTypes.func
+};
 export default AddListForm;

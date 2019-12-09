@@ -1,18 +1,15 @@
-import React, { Component } from "react";
-import AddToList from "../components/buttons/AddToList";
-import ResetList from "../components/buttons/ResetList";
-import AddListForm from "./AddListForm";
-import ToDoList from "../components/ToDoList/ToDoList";
+import AddListForm from './AddListForm';
+import React, { Component } from 'react';
+import ToDoList from '../components/ToDoList/ToDoList';
+import AddToList from '../components/buttons/AddToList';
+import ResetList from '../components/buttons/ResetList';
 
 class ToDo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      toDoList: [],
-      formStatus: false,
-      taskCounter: 0
-    };
-  }
+  state = {
+    toDoList: [],
+    formStatus: false,
+    taskCounter: 0
+  };
 
   componentDidMount() {
     this.getDataFromLocal();
@@ -23,33 +20,37 @@ class ToDo extends Component {
   }
 
   getDataFromLocal = () => {
-    if ("data" in localStorage) {
-      const data = JSON.parse(localStorage.getItem("data"));
+    if ('data' in localStorage) {
+      const data = JSON.parse(localStorage.getItem('data'));
 
       this.setState({ toDoList: data.toDoList, taskCounter: data.taskCounter });
     }
   };
 
   setDataToLocal = () => {
-    localStorage.setItem("data", JSON.stringify(this.state));
+    localStorage.setItem('data', JSON.stringify(this.state));
   };
 
   handleFormSubmit = (e, formData) => {
     e.preventDefault();
-    const newTask = {
+    let newTaskList = this.state.toDoList;
+    newTaskList.push(this.createNewTask(formData));
+
+    this.setState(prevState => ({
+      toDoList: newTaskList,
+      formStatus: false,
+      taskCounter: prevState.taskCounter + 1
+    }));
+  };
+
+  createNewTask = formData => {
+    return {
       id: this.state.taskCounter + 1,
       task: formData.task,
       daysAssigned: formData.daysAssigned,
       issueTimeStamp: new Date().getTime(),
       isDone: false
     };
-    const newTaskList = this.state.toDoList;
-    newTaskList.push(newTask);
-    this.setState(prevState => ({
-      toDoList: newTaskList,
-      formStatus: false,
-      taskCounter: prevState.taskCounter + 1
-    }));
   };
 
   handleActions = (itemId, action) => {
@@ -60,12 +61,12 @@ class ToDo extends Component {
     }
 
     switch (action) {
-      case "checkbox":
+      case 'checkbox':
         list[matchedIndex].isDone = !list[matchedIndex].isDone;
         break;
-      case "edit":
+      case 'edit':
         break;
-      case "delete":
+      case 'delete':
         list.splice(matchedIndex, 1);
         break;
       default:
